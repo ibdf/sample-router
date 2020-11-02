@@ -1,29 +1,51 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 
-Vue.use(VueRouter)
+const Dashboard = () => import('@/views/Dashboard');
+const LayoutDefault = () => import('@/layouts/Default');
+const App1View1 = () => import('@/views/app-1/View-1');
+const App1View2 = () => import('@/views/app-1/View-2');
+const View2Children = () => import('@/views/app-1/View2Children');
+
+Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'Dashboard',
+    component: Dashboard,
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+    path: '/app-1',
+    name: 'app-1',
+    component: LayoutDefault,
+    children: [
+      {
+        path: 'app-1-view-1',
+        name: 'app-1-view-1',
+        component: App1View1,
+      },
+      {
+        path: 'app-1-view-2',
+        name: 'app-1-view-2',
+        component: App1View2,
+        children: [
+          {
+            path: 'app-1-view-2-children/:resultId',
+            name: 'app-1-view-2-children',
+            component: View2Children,
+            props: true,
+          },
+        ],
+      },
+    ],
+  },
+];
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
